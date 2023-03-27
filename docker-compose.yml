@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  localstack.api:
+    image: ${DOCKER_REGISTRY-}localstackapi
+    build:
+      context: .\Localstack.Api
+      dockerfile: Dockerfile
+    ports:
+        - "5000:80"
+        - "5001:443"

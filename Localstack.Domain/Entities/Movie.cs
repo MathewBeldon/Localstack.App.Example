@@ -1,4 +1,6 @@
-﻿namespace Localstack.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Localstack.Domain.Entities
 {
     public sealed class Movie : BaseEntity
     {
