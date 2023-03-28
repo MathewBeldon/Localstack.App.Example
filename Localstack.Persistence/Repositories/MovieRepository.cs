@@ -1,6 +1,8 @@
-﻿namespace Localstack.Persistence.Repositories
+﻿using Localstack.Domain.Entities;
+
+namespace Localstack.Persistence.Repositories
 {
-    internal class MovieRepository
+    public class MovieRepository : BaseRepository<Movie>
     {
     }
 }

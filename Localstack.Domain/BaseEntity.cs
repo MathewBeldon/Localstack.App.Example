@@ -1,7 +1,10 @@
-﻿namespace Localstack.Domain
+﻿using Amazon.DynamoDBv2.DataModel;
+
+namespace Localstack.Domain
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
+        [DynamoDBHashKey]
         public string Id { get; set; }
     }
 }
