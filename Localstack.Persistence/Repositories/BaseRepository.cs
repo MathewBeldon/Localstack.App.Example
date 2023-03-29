@@ -2,39 +2,42 @@
 using Amazon.DynamoDBv2;
 using Localstack.Application.Interfaces.Persistence;
 using Localstack.Domain;
+using Amazon.DynamoDBv2.Model;
+using System.Reflection;
 
 namespace Localstack.Persistence.Repositories
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        private readonly AmazonDynamoDBClient _client;
-        private readonly DynamoDBContext _context;
+        private readonly IAmazonDynamoDB _dynamoDbClient;
+        private readonly DynamoDBContext _dbContext;
 
-        public BaseRepository()
+
+        public BaseRepository(IAmazonDynamoDB amazonDynamoDB)
         {
-            _client = new AmazonDynamoDBClient();
-            _context = new DynamoDBContext(_client);
+            _dynamoDbClient = amazonDynamoDB;
+            _dbContext = new DynamoDBContext(_dynamoDbClient);
         }
 
         public async Task<T> GetByIdAsync(string id, CancellationToken cancellationToken)
         {
-            return await _context.LoadAsync<T>(id, cancellationToken);
+            return await _dbContext.LoadAsync<T>(id, cancellationToken);
         }
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
-            await _context.SaveAsync(entity, cancellationToken);
+            await _dbContext.SaveAsync(entity, cancellationToken);
             return entity;
         }
 
         public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
-            await _context.SaveAsync(entity, cancellationToken);
+            await _dbContext.SaveAsync(entity, cancellationToken);
         }
 
         public async Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
-            await _context.DeleteAsync(entity, cancellationToken);
+            await _dbContext.DeleteAsync(entity, cancellationToken);
         }
     }
 }
