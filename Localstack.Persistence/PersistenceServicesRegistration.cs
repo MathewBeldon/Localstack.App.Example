@@ -1,6 +1,7 @@
 ﻿using Amazon;
 using Amazon.DynamoDBv2;
 using Localstack.Application.Interfaces.Persistence;
+using Localstack.Persistence.Helpers;
 using Localstack.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +19,13 @@ namespace Localstack.Persistence
                     RegionEndpoint = RegionEndpoint.GetBySystemName(configuration["AWS:Region"]),
                     ServiceURL = configuration["AWS:DynamoDBServiceURL"]
                 };
+                var dynamoDbClient = new AmazonDynamoDBClient(dynamoDBConfig);
 
-                return new AmazonDynamoDBClient(dynamoDBConfig);
+                DynamoDbInitializer.InitializeTablesAsync(dynamoDbClient).GetAwaiter().GetResult();
+
+                return dynamoDbClient;
             });
 
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IMovieRepository, MovieRepository>();
 
             return services;
