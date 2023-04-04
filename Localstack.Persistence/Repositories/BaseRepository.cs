@@ -12,7 +12,6 @@ namespace Localstack.Persistence.Repositories
         private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly DynamoDBContext _dbContext;
 
-
         public BaseRepository(IAmazonDynamoDB amazonDynamoDB)
         {
             _dynamoDbClient = amazonDynamoDB;
@@ -26,6 +25,8 @@ namespace Localstack.Persistence.Repositories
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
+            entity.CreatedAtUtc = DateTime.UtcNow;
+            entity.Description = entity.GetType().Name;
             await _dbContext.SaveAsync(entity, cancellationToken);
             return entity;
         }

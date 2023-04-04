@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2.Model;
 using Amazon.DynamoDBv2;
+using Localstack.Domain.Entities;
 
 namespace Localstack.Persistence.Helpers
 {
@@ -20,58 +21,33 @@ namespace Localstack.Persistence.Helpers
             {
                 TableName = "Movie",
                 AttributeDefinitions = new List<AttributeDefinition>
-            {
-                new AttributeDefinition("Id", ScalarAttributeType.S),
-                new AttributeDefinition("Title", ScalarAttributeType.S),
-                new AttributeDefinition("Year", ScalarAttributeType.N),
-                new AttributeDefinition("Director", ScalarAttributeType.S),
-            },
-                KeySchema = new List<KeySchemaElement>
-            {
-                new KeySchemaElement("Id", KeyType.HASH),
-            },
+                {
+                    new AttributeDefinition(nameof(Movie.Id), ScalarAttributeType.S),
+                    new AttributeDefinition(nameof(Movie.Description), ScalarAttributeType.S),
+                    new AttributeDefinition(nameof(Movie.CreatedAtUtcUnixTimestamp), ScalarAttributeType.N),
+
+                },
+                    KeySchema = new List<KeySchemaElement>
+                {
+                    new KeySchemaElement(nameof(Movie.Id), KeyType.HASH),
+                },
                 GlobalSecondaryIndexes = new List<GlobalSecondaryIndex>
-            {
-                new GlobalSecondaryIndex
                 {
-                    IndexName = "Title-index",
-                    KeySchema = new List<KeySchemaElement>
+                    new GlobalSecondaryIndex
                     {
-                        new KeySchemaElement("Title", KeyType.HASH),
+                        IndexName = $"{nameof(Movie.Description)}-index",
+                        KeySchema = new List<KeySchemaElement>
+                        {
+                            new KeySchemaElement(nameof(Movie.Description), KeyType.HASH),
+                            new KeySchemaElement(nameof(Movie.CreatedAtUtcUnixTimestamp), KeyType.RANGE),
+                        },
+                        Projection = new Projection
+                        {
+                            ProjectionType = ProjectionType.ALL
+                        },
+                        ProvisionedThroughput = new ProvisionedThroughput(5, 5)
                     },
-                    Projection = new Projection
-                    {
-                        ProjectionType = ProjectionType.ALL
-                    },
-                    ProvisionedThroughput = new ProvisionedThroughput(5, 5)
                 },
-                new GlobalSecondaryIndex
-                {
-                    IndexName = "Year-index",
-                    KeySchema = new List<KeySchemaElement>
-                    {
-                        new KeySchemaElement("Year", KeyType.HASH),
-                    },
-                    Projection = new Projection
-                    {
-                        ProjectionType = ProjectionType.ALL
-                    },
-                    ProvisionedThroughput = new ProvisionedThroughput(5, 5)
-                },
-                new GlobalSecondaryIndex
-                {
-                    IndexName = "Director-index",
-                    KeySchema = new List<KeySchemaElement>
-                    {
-                        new KeySchemaElement("Director", KeyType.HASH),
-                    },
-                    Projection = new Projection
-                    {
-                        ProjectionType = ProjectionType.ALL
-                    },
-                    ProvisionedThroughput = new ProvisionedThroughput(5, 5)
-                }
-            },
                 ProvisionedThroughput = new ProvisionedThroughput(5, 5),
             };
 

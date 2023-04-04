@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using MediatR;
 
 namespace Localstack.Application
 {
@@ -6,10 +8,7 @@ namespace Localstack.Application
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
-            services.AddMediatR(options =>
-            {
-                options.Lifetime = ServiceLifetime.Scoped;
-            });
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
             return services;
         }

@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Localstack.Persistence
 {
-    public static class ApplicationServicesRegistration
+    public static class PersistanceServicesRegistration
     {
-        public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistanceServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IAmazonDynamoDB>(sc =>
             {

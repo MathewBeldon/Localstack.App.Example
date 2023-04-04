@@ -1,8 +1,9 @@
-﻿using Localstack.Domain.Entities;
-using MediatR;
+﻿using MediatR;
 
 namespace Localstack.Application.Features.Movies.Commands.CreateMovie
 {
-    public sealed record CreateMovieCommandRequest(Movie Movie) : IRequest<CreateMovieCommandResponse>;
-    
+    public sealed record CreateMovieCommandRequest(
+        string Title,
+        int Year,
+        string Director) : IRequest<CreateMovieCommandResponse>;
 }
